@@ -20,7 +20,7 @@ public class ProcedimentoDao {
     /*
  	private String jdbcURL = "jdbc:mysql://localhost:3306/procedimento";
     private String jdbcUsername = "root";
-    private String jdbcPassword = "amanha";
+    private String jdbcPassword = "root";
     private String jdbcDriver = "com.mysql.jdbc.Driver";
         */
 
