@@ -11,3 +11,8 @@ Devido a dificuldade em encontrar as bibliotecas nas versões adequadas ao funci
 Caso o projeto tivesse funcionado de forma adequada, teria-se tido o tempo para adequar as funcionalidades essenciais, melhorá-las e tentar incluir vue.js. O que não foi possível.
 
 Existe um arquivo chamado import.sql do diretório que cria a tabela e preenche os campos necessários para a inicialização
+
+Após recuperar o branch do Git, justar os dados da conexão no arquivo ProcedimentoDao.java para a base de dados a ser utilizada.
+
+A aplicação pode ser inicializada por http://localhost:8080/procedimento-autorizacao/  que irá diretamente para a área de validação.
+Um pequeno link escrito Procedimentos, no lado superior direito, leva a área de manutenção onde poderiam ser ajustados informações e inseridos novos procedimentos.
