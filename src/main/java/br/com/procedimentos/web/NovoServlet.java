@@ -19,10 +19,10 @@ public class NovoServlet extends HttpServlet {
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			if (request.getMethod().equals("POST")) {
+			if (request.getMethod().equals("GET")) {
 				showNewForm(request, response);
 			} else {
-				response.sendRedirect("/");
+				response.sendRedirect(request.getContextPath() + "/");
 			}
 
 		} catch (IOException e) {

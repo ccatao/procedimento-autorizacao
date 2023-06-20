@@ -27,10 +27,10 @@ public class ListarServlet extends HttpServlet {
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			if (request.getMethod().equals("POST")) {
+			if (request.getMethod().equals("GET")) {
 				listarProcedimentos(request, response);
 			} else {
-				response.sendRedirect("/");
+				response.sendRedirect(request.getContextPath() + "/");
 			}
 				
 		} catch (SQLException | IOException e) {

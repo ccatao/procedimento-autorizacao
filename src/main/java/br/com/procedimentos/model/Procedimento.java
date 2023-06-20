@@ -44,7 +44,7 @@ public class Procedimento implements Serializable {
    public Procedimento(Integer procedimento, Integer idade, String sexo, Boolean autorizado) {
 	   this.procedimento = procedimento;
 	   this.idade = idade;
-	   this.sexo = Sexo.valueOf(sexo);
+	   this.sexo = Sexo.getSexoPorDescricao(sexo);
 	   this.autorizado = autorizado;
    }
    

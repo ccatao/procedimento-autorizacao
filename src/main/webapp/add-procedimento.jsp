@@ -15,7 +15,7 @@
                 <nav class="navbar navbar-expand-md navbar-dark" style="background-color: tomato">
 
                     <ul class="navbar-nav">
-                        <li><a href="<%=request.getContextPath()%>/list" class="nav-link">Procedimentos</a></li>
+                        <li><a href="<%=request.getContextPath()%>/listar" class="nav-link">Procedimentos</a></li>
                     </ul>
                 </nav>
             </header>
@@ -46,17 +46,15 @@
                         </c:if>
 
                         <fieldset class="form-group">
+                        	<label>Procedimento</label> <input type="text" value="<c:out value='${procedimento.procedimento}' />" class="form-control" name="idade" required="required">
+                        	
                             <label>Idade</label> <input type="text" value="<c:out value='${procedimento.idade}' />" class="form-control" name="idade" required="required">
-                        </fieldset>
 
-                        <fieldset class="form-group">
                             <label>Sexo</label> <input type="text" value="<c:out value='${procedimento.sexo}' />" class="form-control" name="sexo" required="required">
-                        </fieldset>
 
-                        <fieldset class="form-group">
-                            <label>Autorização</label> <input type="text" value="<c:out value='${procedimento.autorizacao}' />" class="form-control" name="autorizacao" required="required">
-                        </fieldset>
+                            <label>Autorização</label> <input type="text" value="${procedimento.autorizado ? 'SIM' : 'NÃO'}" class="form-control" name="autorizacao" required="required">
 
+						</fieldset>
                         <button type="submit" class="btn btn-success">Salvar</button>
                         </form>
                     </div>

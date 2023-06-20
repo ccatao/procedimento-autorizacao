@@ -39,7 +39,7 @@
                                 <th>Idade</th>
                                 <th>Sexo</th>
                                 <th>Autorização</th>
-                                <th>Actions</th>
+                                <th>O que deseja?</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,9 +57,10 @@
                                         <c:out value="${procedimento.sexo}" />
                                     </td>
                                     <td>
-                                        <c:out value="${procedimento.autorizacao}" />
+                                        <c:out value="${procedimento.autorizado}" />
                                     </td>
-                                    <td><a href="editar?id=<c:out value='${procedimento.procedimento}' />">Editar</a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="excluir?id=<c:out value='${procedimento.procedimento}' />">Excluir</a></td>
+                                    <td><a href="editar?id=<c:out value='${procedimento.procedimento}' />&idade=<c:out value='${procedimento.idade}' />&sexo=<c:out value='${procedimento.sexo}' />">Editar</a> &nbsp;&nbsp;&nbsp;&nbsp; 
+                                    <a href="excluir?id=<c:out value='${procedimento.procedimento}' />&idade=<c:out value='${procedimento.idade}' />&sexo=<c:out value='${procedimento.sexo}' />">Excluir</a></td>
                                 </tr>
                             </c:forEach>
                             <!-- } -->

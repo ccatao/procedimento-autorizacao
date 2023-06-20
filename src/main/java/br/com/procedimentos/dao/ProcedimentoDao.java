@@ -15,29 +15,30 @@ import java.util.List;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import br.com.procedimentos.model.Procedimento;
+import br.com.procedimentos.model.Sexo;
 
 public class ProcedimentoDao {
-    /*
+    
  	private String jdbcURL = "jdbc:mysql://localhost:3306/procedimento";
     private String jdbcUsername = "root";
-    private String jdbcPassword = "root";
+    private String jdbcPassword = "amanha";
     private String jdbcDriver = "com.mysql.jdbc.Driver";
-        */
 
+/*
  	private String jdbcURL = "jdbc:h2:mem:test";
     private String jdbcUsername = "";
     private String jdbcPassword = "";	    
     private String jdbcDriver = "org.h2.Driver";
+*/
 
-
-	    private static final String INSERT_PROCEDIMENTO_SQL = "INSERT INTO procedimento" + "  (procedimento, idade, sexo, autorizacao) VALUES " +
+	    private static final String INSERT_PROCEDIMENTO_SQL = "INSERT INTO procedimento" + "  (procedimento, idade, sexo, autorizado) VALUES " +
 	        " (?, ?, ?, ?);";
 
-	    private static final String SELECT_PROCEDIMENTO_BY_ID = "select procedimento, idade, sexo, autorizacao from procedimento where procedimento =?";
+	    private static final String SELECT_PROCEDIMENTO_BY_ID = "select procedimento, idade, sexo, autorizado from procedimento where procedimento =? and idade ? and sexo =?";
 	    private static final String SELECT_ALL_PROCEDIMENTOS = "select * from procedimento";
 	    private static final String DELETE_PROCEDIMENTOS_SQL = "delete from procedimento where procedimento = ?;";
-	    private static final String UPDATE_PROCEDIMENTOS_SQL = "update procedimento set idade = ?, sexo= ?, autorizacao =? where procedimento = ?;";
-	    private static final String AUTORIZAR_PROCEDIMENTOS_SQL = "select * from procedimento where procedimento = ?, idade = ?, sexo= ?";	    
+	    private static final String UPDATE_PROCEDIMENTOS_SQL = "update procedimento set idade = ?, sexo = ?, autorizado = ? where procedimento = ?;";
+	    private static final String AUTORIZAR_PROCEDIMENTOS_SQL = "select * from procedimento where procedimento = ? and idade = ? and sexo= ?";	    
 	    
 
 	    public ProcedimentoDao() {}
@@ -47,19 +48,22 @@ public class ProcedimentoDao {
 	        try {
 	            Class.forName(jdbcDriver);
 	            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-	            
+	         
+	            // Após várias tentativas, desisti de tentar popular a base.
+	            /*
 	            ScriptRunner sr = new ScriptRunner(connection);
 	            //Creating a reader object
 	            Reader reader = new BufferedReader(new FileReader("src\\main\\import.sql"));
 	            //Running the script
 	            sr.runScript(reader);
+	            */
 
 	        } catch (SQLException e) {
 	            // TODO Auto-generated catch block
 	            e.printStackTrace();
-	        } catch (FileNotFoundException e) {
+	       // } catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+	//			e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -69,7 +73,7 @@ public class ProcedimentoDao {
 
 	    public void insertProcedimento(Procedimento user) throws SQLException {
 	        System.out.println(INSERT_PROCEDIMENTO_SQL);
-	        // try-with-resource statement will auto close the connection.
+
 	        try{
 	        	Connection connection = getConnection();
 	        	PreparedStatement preparedStatement = connection.prepareStatement(INSERT_PROCEDIMENTO_SQL);
@@ -85,30 +89,29 @@ public class ProcedimentoDao {
 	        }
 	    }
 
-	    public Procedimento selectProcedimento(int id) {
-	    	Procedimento procedimento = null;
-	        // Step 1: Establishing a Connection
+	    public Procedimento selectProcedimento(Integer procedimento, Integer idade, String sexo) {
+	    	Procedimento procedimentoEditar = null;
+
 	        try {
 	        	Connection connection = getConnection();
-
-	            // Step 2:Create a statement using connection object
+	        	
 	            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_PROCEDIMENTO_BY_ID);
-	            preparedStatement.setInt(1, id);
+	            preparedStatement.setInt(1, procedimento);
+	            preparedStatement.setInt(2, idade);
+	            preparedStatement.setString(3, Sexo.valueOf(sexo).getDescricao());	            
 	            System.out.println(preparedStatement);
-	            // Step 3: Execute the query or update query
+
 	            ResultSet rs = preparedStatement.executeQuery();
 
-	            // Step 4: Process the ResultSet object.
+
 	            while (rs.next()) {
-	                Integer idade = rs.getInt("idade");
-	                String sexo = rs.getString("sexo");
-	                Boolean autorizacao = rs.getBoolean("autorizacao");
-	                procedimento = new Procedimento(id, idade, sexo, autorizacao);
+	                Boolean autorizado = rs.getBoolean("autorizado");
+	                procedimentoEditar = new Procedimento(procedimento, idade, Sexo.valueOf(sexo).getDescricao(), autorizado);
 	            }
 	        } catch (SQLException e) {
 	            printSQLException(e);
 	        }
-	        return procedimento;
+	        return procedimentoEditar;
 	    }
 
 	    
@@ -117,19 +120,21 @@ public class ProcedimentoDao {
 	        // Step 1: Establishing a Connection
 	        try {
 	        	Connection connection = getConnection();
+	        	
+	        	Sexo sexoEnum = Sexo.valueOf(sexo);
 
 	            // Step 2:Create a statement using connection object
 	            PreparedStatement preparedStatement = connection.prepareStatement(AUTORIZAR_PROCEDIMENTOS_SQL);
 	            preparedStatement.setInt(1, procedimentoAutorizar);
 	            preparedStatement.setInt(2, idade);
-	            preparedStatement.setString(3, sexo);
+	            preparedStatement.setString(3, Sexo.valueOf(Sexo.class, sexo).getDescricao());
 	            System.out.println(preparedStatement);
 	            // Step 3: Execute the query or update query
 	            ResultSet rs = preparedStatement.executeQuery();
 
 	            // Step 4: Process the ResultSet object.
 	            while (rs.next()) {
-	                Boolean autorizacao = rs.getBoolean("autorizacao");
+	                Boolean autorizacao = rs.getBoolean("autorizado");
 	                procedimento = new Procedimento(procedimentoAutorizar, idade, sexo, autorizacao);
 	            }
 	        } catch (SQLException e) {
@@ -155,11 +160,11 @@ public class ProcedimentoDao {
 
 	            // Step 4: Process the ResultSet object.
 	            while (rs.next()) {
-	                int id = rs.getInt("id");
+	                int procedimento = rs.getInt("procedimento");
 	                Integer idade = rs.getInt("idade");
 	                String sexo = rs.getString("sexo");
-	                Boolean autorizacao = rs.getBoolean("autorizacao");
-	                procedimentos.add(new Procedimento(id, idade, sexo, autorizacao));
+	                Boolean autorizado = rs.getBoolean("autorizado");
+	                procedimentos.add(new Procedimento(procedimento, idade, sexo, autorizado));
 	            }
 	        } catch (SQLException e) {
 	            printSQLException(e);

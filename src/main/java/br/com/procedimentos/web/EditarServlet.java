@@ -26,10 +26,10 @@ public class EditarServlet extends HttpServlet{
 	
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		try {
-			if (request.getMethod().equals("POST")) {
+			if (request.getMethod().equals("GET")) {
 				showEditForm(request, response);
 			} else {
-				response.sendRedirect("/");
+				response.sendRedirect(request.getContextPath() + "/");
 			}
 				
 		} catch (SQLException | IOException e) {
@@ -40,10 +40,22 @@ public class EditarServlet extends HttpServlet{
 	
 	private void showEditForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		Procedimento deletaProcedimento = procedimentoDao.selectProcedimento(id);
+		
+		
+		if ( request.getParameter("id") == null ||
+				request.getParameter("idade") == null	||
+				request.getParameter("sexo") == null) {
+			
+			RequestDispatcher dispatcher = request.getRequestDispatcher("listar");
+			dispatcher.forward(request, response);			
+		}
+		
+		Integer procedimento = Integer.parseInt(request.getParameter("id"));
+		Integer idade = Integer.parseInt(request.getParameter("idade"));
+		String sexo = request.getParameter("sexo");
+		Procedimento editaProcedimento = procedimentoDao.selectProcedimento(procedimento, idade, sexo);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("add-procedimento.jsp");
-		request.setAttribute("procedimento", deletaProcedimento);
+		request.setAttribute("procedimento", editaProcedimento);
 		dispatcher.forward(request, response);
 
 	}

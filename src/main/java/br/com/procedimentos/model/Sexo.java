@@ -46,4 +46,8 @@ public enum Sexo {
 		relacionamento = new HashMap<String, Sexo>();
 	    for(Sexo s : values()) relacionamento.put(s.getDescricao(), s);	  
 	}
+	
+	public Sexo getSexoByString(String sexo) {
+		return relacionamento.get(sexo);
+	}
 }
